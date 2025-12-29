@@ -1362,6 +1362,12 @@
   </footer>
 
   <script>
+    // Force scroll to top on page load (fixes browser scroll restoration)
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+
     // Mobile nav toggle
     const navToggle = document.querySelector('.nav__toggle');
     const navLinks = document.querySelector('.nav__links');
