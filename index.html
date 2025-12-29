@@ -759,6 +759,13 @@
       border-bottom: 1px solid var(--sand);
       display: flex;
       align-items: center;
+      justify-content: space-between;
+      gap: var(--space-sm);
+    }
+
+    .demo__widget-header-left {
+      display: flex;
+      align-items: center;
       gap: var(--space-sm);
     }
 
@@ -778,6 +785,32 @@
     .demo__widget-dots span:nth-child(2) { background: #FFD93D; }
     .demo__widget-dots span:nth-child(3) { background: #6BCB77; }
 
+    .demo__expand-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: var(--cardboard);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .demo__expand-btn:hover {
+      background: var(--cardboard-dark);
+      transform: scale(1.02);
+    }
+
+    .demo__expand-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
     .demo__widget-body {
       padding: var(--space-lg);
       text-align: center;
@@ -795,6 +828,78 @@
     .demo__widget-placeholder img {
       width: 120px;
       opacity: 0.6;
+    }
+
+    /* Fullscreen overlay */
+    .demo__fullscreen-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 9999;
+      padding: 20px;
+      flex-direction: column;
+    }
+
+    .demo__fullscreen-overlay.active {
+      display: flex;
+    }
+
+    .demo__fullscreen-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 16px;
+    }
+
+    .demo__fullscreen-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: white;
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .demo__fullscreen-title img {
+      height: 32px;
+    }
+
+    .demo__close-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: var(--cardboard);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .demo__close-btn:hover {
+      background: var(--cardboard-dark);
+    }
+
+    .demo__fullscreen-content {
+      flex: 1;
+      background: white;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .demo__fullscreen-content iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
     }
 
     @media (max-width: 968px) {
@@ -1143,6 +1248,24 @@
       </div>
 
       <div class="demo__widget animate-on-scroll">
+        <div class="demo__widget-header">
+          <div class="demo__widget-header-left">
+            <div class="demo__widget-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+          <button class="demo__expand-btn" id="expandDemo">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <polyline points="9 21 3 21 3 15"></polyline>
+              <line x1="21" y1="3" x2="14" y2="10"></line>
+              <line x1="3" y1="21" x2="10" y2="14"></line>
+            </svg>
+            Expand Demo
+          </button>
+        </div>
         <iframe
           src="https://packllamaembed-production.up.railway.app"
           title="PackLlama Demo"
@@ -1151,6 +1274,29 @@
       </div>
     </div>
   </section>
+
+  <!-- Fullscreen Demo Overlay -->
+  <div class="demo__fullscreen-overlay" id="fullscreenDemo">
+    <div class="demo__fullscreen-header">
+      <div class="demo__fullscreen-title">
+        <img src="packllama-logo.png" alt="PackLlama">
+        <span>PackLlama Demo</span>
+      </div>
+      <button class="demo__close-btn" id="closeFullscreen">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+        Close
+      </button>
+    </div>
+    <div class="demo__fullscreen-content">
+      <iframe
+        src="https://packllamaembed-production.up.railway.app"
+        title="PackLlama Demo - Fullscreen"
+      ></iframe>
+    </div>
+  </div>
 
   <!-- B2B Section -->
   <section class="b2b section section--alt" id="for-movers">
@@ -1259,6 +1405,37 @@
           });
         }
       });
+    });
+
+    // Fullscreen demo toggle
+    const expandBtn = document.getElementById('expandDemo');
+    const closeBtn = document.getElementById('closeFullscreen');
+    const fullscreenOverlay = document.getElementById('fullscreenDemo');
+
+    expandBtn.addEventListener('click', () => {
+      fullscreenOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+
+    closeBtn.addEventListener('click', () => {
+      fullscreenOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && fullscreenOverlay.classList.contains('active')) {
+        fullscreenOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+
+    // Close on click outside content
+    fullscreenOverlay.addEventListener('click', (e) => {
+      if (e.target === fullscreenOverlay) {
+        fullscreenOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
     });
   </script>
 </body>
