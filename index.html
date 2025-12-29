@@ -1366,7 +1366,17 @@
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual';
     }
-    window.scrollTo(0, 0);
+    // Immediate scroll (instant to bypass smooth scroll CSS)
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    // Also scroll after DOM is ready and after a short delay for iframes/images
+    document.addEventListener('DOMContentLoaded', function() {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    });
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      }, 100);
+    });
 
     // Mobile nav toggle
     const navToggle = document.querySelector('.nav__toggle');
