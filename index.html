@@ -1286,8 +1286,9 @@
         </div>
         <iframe
           id="demoIframe"
-          data-src="https://packllamaembed-production.up.railway.app"
+          src="https://packllamaembed-production.up.railway.app"
           title="PackLlama Demo"
+          loading="lazy"
           style="width: 100%; height: 100%; min-height: 550px; border: none; border-radius: 0 0 var(--radius-xl) var(--radius-xl);"
         ></iframe>
       </div>
@@ -1384,25 +1385,18 @@
     // Ensure we're at top immediately
     window.scrollTo(0, 0);
 
-    // Load demo iframe after page is stable (prevents scroll hijacking from iframe focus)
+    // The demo iframe uses loading="lazy" so it only loads when scrolled into view
+    // This prevents focus-triggered scroll hijacking on page load
     const IFRAME_URL = 'https://packllamaembed-production.up.railway.app';
-    const demoIframe = document.getElementById('demoIframe');
     const fullscreenIframe = document.getElementById('fullscreenIframe');
 
     window.addEventListener('load', function() {
-      // Ensure at top, then load iframe after delay
+      // Ensure at top
       window.scrollTo(0, 0);
+      // Enable smooth scrolling after page is stable
       setTimeout(function() {
-        window.scrollTo(0, 0);
-        // Now load the demo iframe
-        if (demoIframe && !demoIframe.src) {
-          demoIframe.src = IFRAME_URL;
-        }
-        // Enable smooth scrolling now that page is stable
-        setTimeout(function() {
-          document.documentElement.classList.add('smooth-scroll');
-        }, 100);
-      }, 300);
+        document.documentElement.classList.add('smooth-scroll');
+      }, 100);
     });
 
     // Mobile nav toggle
