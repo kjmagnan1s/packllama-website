@@ -72,8 +72,11 @@
     }
 
     html {
-      scroll-behavior: smooth;
       font-size: 16px;
+    }
+
+    html.smooth-scroll {
+      scroll-behavior: smooth;
     }
 
     body {
@@ -1112,10 +1115,19 @@
     .animate-on-scroll:nth-child(4) { transition-delay: 0.3s; }
   </style>
   <script>
-    // Disable browser scroll restoration BEFORE page renders
-    if ('scrollRestoration' in history) {
-      history.scrollRestoration = 'manual';
-    }
+    // Prevent any scroll before page is ready
+    (function() {
+      // Disable browser scroll restoration
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+      // Clear any URL hash that might cause scrolling
+      if (window.location.hash) {
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+      }
+      // Force scroll position to top
+      window.scrollTo(0, 0);
+    })();
   </script>
 </head>
 <body>
@@ -1273,7 +1285,8 @@
           </button>
         </div>
         <iframe
-          src="https://packllamaembed-production.up.railway.app"
+          id="demoIframe"
+          data-src="https://packllamaembed-production.up.railway.app"
           title="PackLlama Demo"
           style="width: 100%; height: 100%; min-height: 550px; border: none; border-radius: 0 0 var(--radius-xl) var(--radius-xl);"
         ></iframe>
@@ -1298,7 +1311,7 @@
     </div>
     <div class="demo__fullscreen-content">
       <iframe
-        src="https://packllamaembed-production.up.railway.app"
+        id="fullscreenIframe"
         title="PackLlama Demo - Fullscreen"
       ></iframe>
     </div>
@@ -1368,6 +1381,30 @@
   </footer>
 
   <script>
+    // Ensure we're at top immediately
+    window.scrollTo(0, 0);
+
+    // Load demo iframe after page is stable (prevents scroll hijacking from iframe focus)
+    const IFRAME_URL = 'https://packllamaembed-production.up.railway.app';
+    const demoIframe = document.getElementById('demoIframe');
+    const fullscreenIframe = document.getElementById('fullscreenIframe');
+
+    window.addEventListener('load', function() {
+      // Ensure at top, then load iframe after delay
+      window.scrollTo(0, 0);
+      setTimeout(function() {
+        window.scrollTo(0, 0);
+        // Now load the demo iframe
+        if (demoIframe && !demoIframe.src) {
+          demoIframe.src = IFRAME_URL;
+        }
+        // Enable smooth scrolling now that page is stable
+        setTimeout(function() {
+          document.documentElement.classList.add('smooth-scroll');
+        }, 100);
+      }, 300);
+    });
+
     // Mobile nav toggle
     const navToggle = document.querySelector('.nav__toggle');
     const navLinks = document.querySelector('.nav__links');
@@ -1419,6 +1456,10 @@
     const fullscreenOverlay = document.getElementById('fullscreenDemo');
 
     expandBtn.addEventListener('click', () => {
+      // Load fullscreen iframe on demand
+      if (fullscreenIframe && !fullscreenIframe.src) {
+        fullscreenIframe.src = IFRAME_URL;
+      }
       fullscreenOverlay.classList.add('active');
       document.body.style.overflow = 'hidden';
     });
