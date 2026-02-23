@@ -830,95 +830,323 @@
       height: 16px;
     }
 
-    .demo__widget-body {
-      padding: var(--space-lg);
-      text-align: center;
-      color: var(--text-muted);
+    /* Scripted demo widget internals */
+    .demo__widget-container {
+      display: flex;
+      height: 550px;
     }
 
-    .demo__widget-placeholder {
+    .demo__chat-panel {
+      flex: 1;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: var(--space-md);
-      padding: var(--space-xl);
+      min-width: 0;
     }
 
-    .demo__widget-placeholder img {
-      width: 120px;
-      opacity: 0.6;
-    }
-
-    /* Fullscreen overlay */
-    .demo__fullscreen-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.95);
-      z-index: 9999;
-      padding: 20px;
-      flex-direction: column;
-    }
-
-    .demo__fullscreen-overlay.active {
+    .demo__inventory-panel {
+      width: 280px;
+      border-left: 1px solid #e5e7eb;
       display: flex;
+      flex-direction: column;
+      background: #fff;
+      overflow: hidden;
     }
 
-    .demo__fullscreen-header {
+    .demo__inventory-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid #e5e7eb;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding-bottom: 16px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--charcoal);
     }
 
-    .demo__fullscreen-title {
+    .demo__inventory-header .inv-count {
+      font-size: 0.75rem;
+      color: var(--brown);
+      font-weight: 500;
+    }
+
+    .demo__inventory-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0;
+    }
+
+    .demo__inventory-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: #999;
+      font-size: 0.875rem;
+      text-align: center;
+      padding: 24px;
+      gap: 8px;
+    }
+
+    .demo__inventory-empty .empty-icon {
+      font-size: 2.5rem;
+      opacity: 0.4;
+    }
+
+    .demo__room-section {
+      border-bottom: 1px solid #f0f0f0;
+      animation: fadeInUp 0.4s ease-out both;
+    }
+
+    .demo__room-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      background: #f5f0e8;
+      cursor: default;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--charcoal);
+    }
+
+    .demo__room-stats {
+      font-size: 0.7rem;
+      color: var(--brown);
+      font-weight: 500;
+    }
+
+    .demo__inv-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      font-size: 0.8rem;
+      border-bottom: 1px solid #f8f8f8;
+      animation: fadeInUp 0.3s ease-out both;
+    }
+
+    .demo__inv-item-name {
+      flex: 1;
+      color: #333;
+      font-weight: 500;
+    }
+
+    .demo__inv-item-meta {
       display: flex;
       align-items: center;
       gap: 12px;
-      color: white;
-      font-family: var(--font-display);
-      font-size: 1.25rem;
+      color: #999;
+      font-size: 0.7rem;
+    }
+
+    .demo__inv-item-qty {
+      font-weight: 700;
+      color: var(--charcoal);
+      font-size: 0.8rem;
+      min-width: 16px;
+      text-align: center;
+    }
+
+    /* Inventory progress footer */
+    .demo__inventory-footer {
+      padding: 12px 16px;
+      border-top: 1px solid #e5e7eb;
+      background: #faf7f2;
+    }
+
+    .demo__progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      color: var(--brown);
+      margin-bottom: 6px;
       font-weight: 600;
     }
 
-    .demo__fullscreen-title img {
-      height: 32px;
+    .demo__progress-bar {
+      height: 6px;
+      background: #e5e7eb;
+      border-radius: 3px;
+      overflow: hidden;
     }
 
-    .demo__close-btn {
+    .demo__progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--cardboard), var(--terracotta));
+      border-radius: 3px;
+      transition: width 0.8s ease;
+      width: 0%;
+    }
+
+    /* Chat messages area */
+    .demo__messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      background: #faf7f2;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .demo__message {
+      display: flex;
+      animation: fadeInUp 0.4s ease-out both;
+    }
+
+    .demo__message--assistant {
+      justify-content: flex-start;
+    }
+
+    .demo__message--user {
+      justify-content: flex-end;
+    }
+
+    .demo__bubble {
+      max-width: 85%;
+      padding: 12px 16px;
+      font-size: 0.875rem;
+      line-height: 1.6;
+      font-family: var(--font-body);
+    }
+
+    .demo__bubble--assistant {
+      background: #fff;
+      color: #333;
+      border: 1px solid #e5e7eb;
+      border-radius: 18px 18px 18px 4px;
+    }
+
+    .demo__bubble--user {
+      background: linear-gradient(135deg, #C4956A, #A67B52);
+      color: white;
+      border-radius: 18px 18px 4px 18px;
+    }
+
+    /* Typing indicator */
+    .demo__typing {
       display: flex;
       align-items: center;
+      gap: 4px;
+      padding: 12px 18px;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 18px 18px 18px 4px;
+    }
+
+    .demo__typing-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--cardboard);
+      border-radius: 50%;
+      animation: typingBounce 1.4s ease-in-out infinite;
+    }
+
+    .demo__typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .demo__typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typingBounce {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-6px); }
+    }
+
+    /* Chat input area */
+    .demo__input-area {
+      padding: 12px 16px;
+      border-top: 1px solid #e5e7eb;
+      background: #fff;
+      display: flex;
       gap: 8px;
-      padding: 12px 24px;
+      align-items: center;
+    }
+
+    .demo__input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-family: var(--font-body);
+      color: var(--charcoal);
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .demo__input:focus {
+      border-color: var(--cardboard);
+      box-shadow: 0 0 0 3px rgba(196, 149, 106, 0.15);
+    }
+
+    .demo__input::placeholder {
+      color: #8B7355;
+    }
+
+    .demo__input:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .demo__send-btn {
+      padding: 10px 16px;
       background: var(--cardboard);
       color: white;
       border: none;
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .demo__send-btn:hover:not(:disabled) {
+      background: var(--cardboard-dark);
+      transform: translateY(-1px);
+    }
+
+    .demo__send-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .demo__input-hint {
+      text-align: center;
+      font-size: 0.7rem;
+      color: #999;
+      padding: 0 16px 8px;
+      background: #fff;
+    }
+
+    /* Replay button */
+    .demo__replay-btn {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: transparent;
+      color: var(--cardboard-dark);
+      border: 1.5px solid var(--cardboard);
       border-radius: var(--radius-md);
       font-family: var(--font-body);
-      font-size: 1rem;
+      font-size: 0.8rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s ease;
     }
 
-    .demo__close-btn:hover {
-      background: var(--cardboard-dark);
+    .demo__replay-btn:hover {
+      background: var(--cardboard);
+      color: white;
     }
 
-    .demo__fullscreen-content {
-      flex: 1;
-      background: white;
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-    }
-
-    .demo__fullscreen-content iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
+    .demo__replay-btn.visible {
+      display: flex;
     }
 
     @media (max-width: 968px) {
@@ -928,6 +1156,14 @@
 
       .demo__widget {
         min-height: 400px;
+      }
+
+      .demo__widget-container {
+        height: 480px;
+      }
+
+      .demo__inventory-panel {
+        display: none;
       }
     }
 
@@ -1290,48 +1526,63 @@
               <span></span>
             </div>
           </div>
-          <button class="demo__expand-btn" id="expandDemo">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="15 3 21 3 21 9"></polyline>
-              <polyline points="9 21 3 21 3 15"></polyline>
-              <line x1="21" y1="3" x2="14" y2="10"></line>
-              <line x1="3" y1="21" x2="10" y2="14"></line>
+          <button class="demo__replay-btn" id="replayDemo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="1 4 1 10 7 10"></polyline>
+              <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
             </svg>
-            Expand Demo
+            Replay
           </button>
         </div>
-        <iframe
-          id="demoIframe"
-          data-src="https://packllamaembed-production.up.railway.app"
-          title="PackLlama Demo"
-          style="width: 100%; height: 100%; min-height: 550px; border: none; border-radius: 0 0 var(--radius-xl) var(--radius-xl);"
-        ></iframe>
+        <div class="demo__widget-container">
+          <!-- Chat Panel -->
+          <div class="demo__chat-panel">
+            <div class="demo__messages" id="demoMessages">
+              <div class="demo__message demo__message--assistant">
+                <div class="demo__bubble demo__bubble--assistant">
+                  Hi! I'm PackLlama, your moving inventory assistant. Tell me about your home and I'll help you build a detailed inventory. What kind of place are you moving from?
+                </div>
+              </div>
+            </div>
+            <div class="demo__input-hint">Try clicking Send to see how PackLlama works</div>
+            <div class="demo__input-area">
+              <input type="text" class="demo__input" id="demoInput" value="I have a 2 bedroom apartment with a home office" readonly>
+              <button class="demo__send-btn" id="demoSendBtn">
+                Send
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <!-- Inventory Panel -->
+          <div class="demo__inventory-panel">
+            <div class="demo__inventory-header">
+              <span>Inventory</span>
+              <span class="inv-count" id="demoItemCount">0 items</span>
+            </div>
+            <div class="demo__inventory-list" id="demoInventory">
+              <div class="demo__inventory-empty" id="demoInvEmpty">
+                <span class="empty-icon">📦</span>
+                <span>No items yet</span>
+                <span style="font-size: 0.75rem; color: #bbb;">Send a message to get started</span>
+              </div>
+            </div>
+            <div class="demo__inventory-footer" id="demoInvFooter" style="display: none;">
+              <div class="demo__progress-label">
+                <span>Estimated Volume</span>
+                <span id="demoCuFt">0 cu ft</span>
+              </div>
+              <div class="demo__progress-bar">
+                <div class="demo__progress-fill" id="demoProgressFill"></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
-
-  <!-- Fullscreen Demo Overlay -->
-  <div class="demo__fullscreen-overlay" id="fullscreenDemo">
-    <div class="demo__fullscreen-header">
-      <div class="demo__fullscreen-title">
-        <img src="packllama-logo.png" alt="PackLlama">
-        <span>PackLlama Demo</span>
-      </div>
-      <button class="demo__close-btn" id="closeFullscreen">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-        Close
-      </button>
-    </div>
-    <div class="demo__fullscreen-content">
-      <iframe
-        id="fullscreenIframe"
-        title="PackLlama Demo - Fullscreen"
-      ></iframe>
-    </div>
-  </div>
 
   <!-- B2B Section -->
   <section class="b2b section section--alt" id="for-movers">
@@ -1400,57 +1651,31 @@
     // Ensure we're at top immediately
     window.scrollTo(0, 0);
 
-    const IFRAME_URL = 'https://packllamaembed-production.up.railway.app';
-    const demoIframe = document.getElementById('demoIframe');
-    const fullscreenIframe = document.getElementById('fullscreenIframe');
-
-    // Load iframe ONLY when user actually scrolls it into view
-    // This prevents Chrome's lazy loading threshold from loading it too early
-    const iframeObserver = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
-        if (entry.isIntersecting && demoIframe && !demoIframe.src) {
-          demoIframe.src = demoIframe.dataset.src;
-          iframeObserver.disconnect();
-        }
-      });
-    }, {
-      threshold: 0.1,
-      rootMargin: '0px' // No margin - only load when actually visible
-    });
-
-    if (demoIframe) {
-      iframeObserver.observe(demoIframe);
-    }
-
     window.addEventListener('load', function() {
-      // Ensure at top
       window.scrollTo(0, 0);
-      // Enable smooth scrolling after page is stable
       setTimeout(function() {
         document.documentElement.classList.add('smooth-scroll');
       }, 100);
     });
 
     // Mobile nav toggle
-    const navToggle = document.querySelector('.nav__toggle');
-    const navLinks = document.querySelector('.nav__links');
+    var navToggle = document.querySelector('.nav__toggle');
+    var navLinks = document.querySelector('.nav__links');
 
-    navToggle.addEventListener('click', () => {
+    navToggle.addEventListener('click', function() {
       navLinks.classList.toggle('active');
     });
 
-    // Close mobile nav on link click
-    document.querySelectorAll('.nav__link').forEach(link => {
-      link.addEventListener('click', () => {
+    document.querySelectorAll('.nav__link').forEach(function(link) {
+      link.addEventListener('click', function() {
         navLinks.classList.remove('active');
       });
     });
 
     // Scroll animations
-    const animateElements = document.querySelectorAll('.animate-on-scroll');
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
+    var animateElements = document.querySelectorAll('.animate-on-scroll');
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
         }
@@ -1459,57 +1684,242 @@
       threshold: 0.1,
       rootMargin: '0px 0px -50px 0px'
     });
-
-    animateElements.forEach(el => observer.observe(el));
+    animateElements.forEach(function(el) { observer.observe(el); });
 
     // Smooth scroll for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
       anchor.addEventListener('click', function(e) {
         e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
+        var target = document.querySelector(this.getAttribute('href'));
         if (target) {
-          target.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-          });
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
       });
     });
 
-    // Fullscreen demo toggle
-    const expandBtn = document.getElementById('expandDemo');
-    const closeBtn = document.getElementById('closeFullscreen');
-    const fullscreenOverlay = document.getElementById('fullscreenDemo');
+    // ================================================
+    // SCRIPTED DEMO
+    // ================================================
+    var demoMessages = document.getElementById('demoMessages');
+    var demoInput = document.getElementById('demoInput');
+    var demoSendBtn = document.getElementById('demoSendBtn');
+    var demoInventory = document.getElementById('demoInventory');
+    var demoInvEmpty = document.getElementById('demoInvEmpty');
+    var demoInvFooter = document.getElementById('demoInvFooter');
+    var demoItemCount = document.getElementById('demoItemCount');
+    var demoCuFt = document.getElementById('demoCuFt');
+    var demoProgressFill = document.getElementById('demoProgressFill');
+    var replayBtn = document.getElementById('replayDemo');
 
-    expandBtn.addEventListener('click', () => {
-      // Load fullscreen iframe on demand
-      if (fullscreenIframe && !fullscreenIframe.src) {
-        fullscreenIframe.src = IFRAME_URL;
+    var SCRIPTED_ROOMS = [
+      {
+        name: 'Living Room',
+        items: [
+          { name: 'Sofa (3-seat)', qty: 1, cuft: 40, lbs: 100 },
+          { name: 'Coffee Table', qty: 1, cuft: 10, lbs: 35 },
+          { name: 'TV Stand', qty: 1, cuft: 15, lbs: 50 },
+          { name: 'Floor Lamp', qty: 2, cuft: 5, lbs: 10 },
+        ]
+      },
+      {
+        name: 'Master Bedroom',
+        items: [
+          { name: 'Queen Bed & Mattress', qty: 1, cuft: 50, lbs: 120 },
+          { name: 'Dresser (6-drawer)', qty: 1, cuft: 30, lbs: 90 },
+          { name: 'Nightstand', qty: 2, cuft: 5, lbs: 20 },
+        ]
+      },
+      {
+        name: 'Bedroom 2',
+        items: [
+          { name: 'Full Bed & Mattress', qty: 1, cuft: 40, lbs: 90 },
+          { name: 'Small Dresser', qty: 1, cuft: 20, lbs: 55 },
+          { name: 'Bookshelf', qty: 1, cuft: 25, lbs: 45 },
+        ]
+      },
+      {
+        name: 'Home Office',
+        items: [
+          { name: 'Office Desk', qty: 1, cuft: 25, lbs: 60 },
+          { name: 'Office Chair', qty: 1, cuft: 15, lbs: 30 },
+          { name: 'Filing Cabinet', qty: 1, cuft: 10, lbs: 40 },
+          { name: 'Monitor + Stand', qty: 1, cuft: 8, lbs: 15 },
+        ]
       }
-      fullscreenOverlay.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    });
+    ];
 
-    closeBtn.addEventListener('click', () => {
-      fullscreenOverlay.classList.remove('active');
-      document.body.style.overflow = '';
-    });
+    var AI_RESPONSE = "A 2 bedroom apartment with a home office, got it! I've started building your inventory with the most common items for each room. Here's what I've added to get us started. You can review the inventory on the right and let me know if you'd like to add, remove, or adjust anything!";
 
-    // Close on Escape key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && fullscreenOverlay.classList.contains('active')) {
-        fullscreenOverlay.classList.remove('active');
-        document.body.style.overflow = '';
+    var demoPlaying = false;
+
+    function sleep(ms) {
+      return new Promise(function(resolve) { setTimeout(resolve, ms); });
+    }
+
+    function addMessage(text, type) {
+      var msg = document.createElement('div');
+      msg.className = 'demo__message demo__message--' + type;
+      var bubble = document.createElement('div');
+      bubble.className = 'demo__bubble demo__bubble--' + type;
+      bubble.textContent = text;
+      msg.appendChild(bubble);
+      demoMessages.appendChild(msg);
+      demoMessages.scrollTop = demoMessages.scrollHeight;
+      return msg;
+    }
+
+    function showTyping() {
+      var msg = document.createElement('div');
+      msg.className = 'demo__message demo__message--assistant';
+      msg.id = 'typingIndicator';
+      var container = document.createElement('div');
+      container.className = 'demo__typing';
+      for (var i = 0; i < 3; i++) {
+        var dot = document.createElement('span');
+        dot.className = 'demo__typing-dot';
+        container.appendChild(dot);
       }
-    });
+      msg.appendChild(container);
+      demoMessages.appendChild(msg);
+      demoMessages.scrollTop = demoMessages.scrollHeight;
+    }
 
-    // Close on click outside content
-    fullscreenOverlay.addEventListener('click', (e) => {
-      if (e.target === fullscreenOverlay) {
-        fullscreenOverlay.classList.remove('active');
-        document.body.style.overflow = '';
+    function hideTyping() {
+      var el = document.getElementById('typingIndicator');
+      if (el) el.remove();
+    }
+
+    function createRoomSection(room, animDelay) {
+      var section = document.createElement('div');
+      section.className = 'demo__room-section';
+      section.style.animationDelay = animDelay + 'ms';
+
+      var totalCuft = room.items.reduce(function(sum, i) { return sum + (i.cuft * i.qty); }, 0);
+      var totalItems = room.items.reduce(function(sum, i) { return sum + i.qty; }, 0);
+
+      // Room header
+      var header = document.createElement('div');
+      header.className = 'demo__room-header';
+      var headerName = document.createElement('span');
+      headerName.textContent = room.name;
+      var headerStats = document.createElement('span');
+      headerStats.className = 'demo__room-stats';
+      headerStats.textContent = totalItems + ' items \u00B7 ' + totalCuft + ' cu ft';
+      header.appendChild(headerName);
+      header.appendChild(headerStats);
+      section.appendChild(header);
+
+      // Items
+      room.items.forEach(function(item, i) {
+        var row = document.createElement('div');
+        row.className = 'demo__inv-item';
+        row.style.animationDelay = (i * 80) + 'ms';
+
+        var nameSpan = document.createElement('span');
+        nameSpan.className = 'demo__inv-item-name';
+        nameSpan.textContent = item.name;
+
+        var metaSpan = document.createElement('span');
+        metaSpan.className = 'demo__inv-item-meta';
+
+        var cuftSpan = document.createElement('span');
+        cuftSpan.textContent = item.cuft + ' cu ft';
+
+        var qtySpan = document.createElement('span');
+        qtySpan.className = 'demo__inv-item-qty';
+        qtySpan.textContent = item.qty;
+
+        metaSpan.appendChild(cuftSpan);
+        metaSpan.appendChild(qtySpan);
+        row.appendChild(nameSpan);
+        row.appendChild(metaSpan);
+        section.appendChild(row);
+      });
+
+      return section;
+    }
+
+    function updateTotals() {
+      var totalItems = 0;
+      var totalCuft = 0;
+      SCRIPTED_ROOMS.forEach(function(room) {
+        room.items.forEach(function(item) {
+          totalItems += item.qty;
+          totalCuft += item.cuft * item.qty;
+        });
+      });
+      demoItemCount.textContent = totalItems + ' items';
+      demoCuFt.textContent = totalCuft + ' cu ft';
+      demoProgressFill.style.width = Math.min((totalCuft / 600) * 100, 100) + '%';
+    }
+
+    async function runDemo() {
+      if (demoPlaying) return;
+      demoPlaying = true;
+      demoSendBtn.disabled = true;
+      demoInput.disabled = true;
+
+      // Hide hint text
+      var hintEl = document.querySelector('.demo__input-hint');
+      if (hintEl) hintEl.style.display = 'none';
+
+      // Add user message
+      addMessage(demoInput.value, 'user');
+      demoInput.value = '';
+
+      // Show typing
+      await sleep(600);
+      showTyping();
+      await sleep(2200);
+      hideTyping();
+
+      // Show AI response
+      addMessage(AI_RESPONSE, 'assistant');
+
+      // Populate inventory
+      await sleep(500);
+      demoInvEmpty.style.display = 'none';
+      demoInvFooter.style.display = 'block';
+
+      for (var i = 0; i < SCRIPTED_ROOMS.length; i++) {
+        await sleep(i === 0 ? 300 : 500);
+        var section = createRoomSection(SCRIPTED_ROOMS[i], 0);
+        demoInventory.appendChild(section);
+        demoInventory.scrollTop = demoInventory.scrollHeight;
       }
-    });
+
+      // Scroll inventory to top so Living Room is visible
+      demoInventory.scrollTop = 0;
+
+      updateTotals();
+      replayBtn.classList.add('visible');
+      demoPlaying = false;
+    }
+
+    function resetDemo() {
+      demoPlaying = false;
+      while (demoMessages.children.length > 1) {
+        demoMessages.removeChild(demoMessages.lastChild);
+      }
+      // Clear inventory sections but keep the empty state element
+      var sections = demoInventory.querySelectorAll('.demo__room-section');
+      sections.forEach(function(s) { s.remove(); });
+      demoInvEmpty.style.display = 'flex';
+      demoInvFooter.style.display = 'none';
+      demoItemCount.textContent = '0 items';
+      demoCuFt.textContent = '0 cu ft';
+      demoProgressFill.style.width = '0%';
+      demoInput.value = 'I have a 2 bedroom apartment with a home office';
+      demoInput.disabled = false;
+      demoSendBtn.disabled = false;
+      replayBtn.classList.remove('visible');
+      // Restore hint text
+      var hintEl = document.querySelector('.demo__input-hint');
+      if (hintEl) hintEl.style.display = '';
+    }
+
+    demoSendBtn.addEventListener('click', runDemo);
+    replayBtn.addEventListener('click', resetDemo);
   </script>
 </body>
 </html>
